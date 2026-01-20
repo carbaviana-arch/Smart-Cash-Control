@@ -34,16 +34,13 @@ const app = {
         `).join('');
     },
 
-    // LÓGICA NUEVA: RESUMEN CIERRE
     calculateResumen() {
         const fondoAyer = parseFloat(document.getElementById('resumen-fondo-ayer').value) || 0;
         const efectivo = parseFloat(document.getElementById('resumen-efectivo').value) || 0;
         const gastos = parseFloat(document.getElementById('resumen-gastos').value) || 0;
         const sobre = parseFloat(document.getElementById('resumen-sobre').value) || 0;
 
-        // FÓRMULA: Fondo Ayer + Efectivo - Gastos - Sobre
         const fondoHoy = fondoAyer + efectivo - gastos - sobre;
-        
         document.getElementById('resumen-fondo-hoy').innerText = `€${fondoHoy.toFixed(2)}`;
     },
 
@@ -53,15 +50,18 @@ const app = {
             totalDenom += (parseFloat(i.value) || 0) * parseFloat(i.dataset.value);
         });
 
-        const totalCashA = totalDenom;
-        document.getElementById('total-counted').innerText = `€${totalDenom.toFixed(2)}`;
-        document.getElementById('total-cash-combined').value = totalCashA.toFixed(2);
+        // Sumar Caja Fuerte al subtotal físico
+        const safeAmount = parseFloat(document.getElementById('safe-amount').value) || 0;
+        const totalRealCaja = totalDenom + safeAmount;
+
+        document.getElementById('total-counted').innerText = `€${totalRealCaja.toFixed(2)}`;
+        document.getElementById('total-cash-combined').value = totalRealCaja.toFixed(2);
 
         const fondoAyer = parseFloat(document.getElementById('fondo-ayer').value) || 0;
         const ventas = parseFloat(document.getElementById('ventas-efectivo').value) || 0;
         const totalCajaB = fondoAyer + ventas;
         
-        const diff = totalCashA - totalCajaB;
+        const diff = totalRealCaja - totalCajaB;
         const diffEl = document.getElementById('diff-caja-total');
         diffEl.innerText = `€${diff.toFixed(2)}`;
         diffEl.className = (Math.abs(diff) < 0.01) ? 'status-badge val-success' : 'status-badge val-error';
@@ -69,17 +69,19 @@ const app = {
 
     shareWhatsApp() {
         const fondoHoy = document.getElementById('resumen-fondo-hoy').innerText;
+        const totalReal = document.getElementById('total-cash-combined').value;
         const gastos = document.getElementById('resumen-gastos').value;
         const detalle = document.getElementById('resumen-detalle-gastos').value;
         const sobre = document.getElementById('resumen-sobre').value;
 
-        const text = `*CIERRE DE CAJA v2.0* 📊%0A%0A` +
+        const text = `*CIERRE DE CAJA v2.1* 📊%0A%0A` +
                      `*RESUMEN CONTABLE*%0A` +
                      `• Fondo Ayer: €${document.getElementById('resumen-fondo-ayer').value}%0A` +
                      `• Efectivo: €${document.getElementById('resumen-efectivo').value}%0A` +
                      `• Gastos: €${gastos}%0A` +
                      `• Sobre: €${sobre}%0A` +
-                     `• *FONDO HOY: ${fondoHoy}*%0A%0A` +
+                     `• *FONDO HOY (Teórico): ${fondoHoy}*%0A` +
+                     `• *TOTAL REAL CAJA: €${totalReal}*%0A%0A` +
                      `*DETALLE GASTOS:*%0A${detalle || 'Sin gastos registrados.'}`;
 
         window.open(`https://wa.me/?text=${text}`, '_blank');
@@ -95,6 +97,7 @@ const app = {
                 gastos: document.getElementById('resumen-gastos').value,
                 detalle: document.getElementById('resumen-detalle-gastos').value
             },
+            safe: document.getElementById('safe-amount').value,
             denominations: {}
         };
         document.querySelectorAll('.denom-input').forEach(i => { data.denominations[i.dataset.value] = i.value; });
@@ -102,7 +105,7 @@ const app = {
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `Cierre_${new Date().toLocaleDateString()}.json`;
+        a.download = `Cierre_Auditoria_${new Date().toLocaleDateString()}.json`;
         a.click();
     },
 
@@ -118,8 +121,15 @@ const app = {
                 document.getElementById('resumen-gastos').value = data.resumen.gastos;
                 document.getElementById('resumen-detalle-gastos').value = data.resumen.detalle;
             }
+            if(data.safe) document.getElementById('safe-amount').value = data.safe;
+            
+            document.querySelectorAll('.denom-input').forEach(i => {
+                i.value = data.denominations[i.dataset.value] || "";
+            });
+
             this.calculateResumen();
             this.calculateTotal();
+            alert("Archivo de auditoría cargado.");
         };
         reader.readAsText(event.target.files[0]);
     },
@@ -146,7 +156,7 @@ const app = {
         const list = document.getElementById('history-list');
         list.innerHTML = this.closings.map(c => `
             <div class="card">
-                <strong>${new Date(c.date).toLocaleDateString()}</strong> - Fondo Final: €${c.totalA.toFixed(2)}
+                <strong>${new Date(c.date).toLocaleDateString()}</strong> - Total Real: €${c.totalA.toFixed(2)}
             </div>
         `).join('');
     }
