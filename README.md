@@ -1,78 +1,73 @@
-Smart Cash Control - v1.1
-Smart Cash Control es una herramienta avanzada de gestión financiera diseñada para el cierre de caja operativo en hostelería y retail. Esta versión 1.1 introduce un sistema de conciliación de doble entrada, permitiendo validar no solo el efectivo físico, sino también la correlación entre ventas teóricas y cierres de terminales de tarjeta (Datafono).
+# Smart Cash Control - v1.1
 
-🚀 Características Principales (v1.1)
-1. Gestión de Efectivo y Caja Fuerte
-Conteo por Denominación: Desglose detallado de monedas y billetes con cálculo en tiempo real.
+**Smart Cash Control** es una solución web profesional diseñada para optimizar el proceso de arqueo y conciliación de caja diaria en entornos de hostelería y retail. Esta herramienta implementa un sistema de **doble validación contable** y comunicación automatizada, eliminando errores de cálculo manual y centralizando el registro de diferencias.
 
-Gestión de Caja Fuerte: Campo específico para declarar el efectivo en reserva, sumándose al total físico.
+## 🚀 Características Principales (v1.1)
 
-Integridad de Datos: El campo de subtotal de desglose es de solo lectura, obligando a un conteo físico real para evitar ajustes manuales arbitrarios.
+### 1. Conciliación de Doble Entrada
+El sistema no solo cuenta dinero, sino que valida la integridad financiera mediante dos comparativas:
+* **Efectivo (Físico vs Teórico):** Compara el efectivo contado (monedas, billetes, fondo de caja y caja fuerte) contra el esperado (fondo inicial del día anterior + ventas del TPV).
+* **Datafono (Físico vs Teórico):** Compara el cierre del terminal de tarjetas contra el reporte Z (ventas en tarjeta) del sistema.
 
-2. Conciliación de Efectivo (A vs B)
-El sistema implementa una validación contable entre dos magnitudes:
+### 2. Automatización Operativa
+* **Fondo Ayer Inteligente:** Al iniciar un nuevo arqueo, la app sugiere automáticamente como "Fondo Ayer" el total real del cierre anterior almacenado en el sistema.
+* **Validación Visual iOS:** Indicadores tipo semáforo que cambian a **verde** si la diferencia es exactamente 0.00 y a **rojo** si existe descuadre.
+* **Teclado Optimizado:** Configuración específica para dispositivos móviles que despliega el teclado numérico decimal automáticamente.
 
-Total Caja A (Físico): Suma del conteo de monedas/billetes + Fondo Inicial + Caja Fuerte.
+### 3. Conectividad y Reportes
+* **Compartir en WhatsApp:** Botón dedicado que genera un resumen estructurado con emojis y formato profesional, enviándolo directamente a un grupo de WhatsApp de gerencia.
+* **Historial Local:** Almacenamiento persistente en el navegador para auditorías rápidas sin necesidad de servidor.
+* **Privacidad:** Los datos permanecen localmente en el dispositivo del usuario.
 
-Total Caja B (Teórico): Suma del Fondo de Ayer + Ventas declaradas.
+---
 
-Validación Visual: El sistema compara A y B. Si la diferencia es exactamente 0.00, se marca en verde; cualquier otra diferencia se resalta en rojo.
+## 🛠️ Stack Técnico
 
-3. Conciliación de Datafono y Reporte Z
-Validación de Tarjetas: Módulo independiente para comparar el total del cierre del terminal (Datafono) contra el reporte de ventas del sistema (Reporte Z).
+* **Lenguajes:** HTML5, CSS3 (Variables y Flexbox), JavaScript Vanilla (ES6+).
+* **Interfaz:** Diseño basado en las **Human Interface Guidelines de Apple** (Estilo iOS).
+* **Persistencia:** Web Storage API (`localStorage`).
+* **Integración:** API Pública de WhatsApp (`wa.me`).
 
-Indicador de Descuadre: Al igual que en efectivo, el sistema alerta visualmente si existe alguna discrepancia entre el cobro físico en tarjeta y lo registrado.
+---
 
-4. Histórico y Reportes
-Persistencia Local: Almacenamiento persistente en localStorage.
-
-Auditoría: Registro de observaciones para justificar descuadres detectados.
-
-Exportación: Generación de reportes en PDF (vía impresión optimizada) y Excel (CSV).
-
-🛠️ Stack Técnico
-Arquitectura: Single Page Application (SPA).
-
-Lenguajes: HTML5, CSS3 (Variables y Flexbox), JavaScript ES6+.
-
-Interfaz: iOS Design System (Apple Human Interface Guidelines).
-
-Uso de backdrop-filter para efectos de desenfoque.
-
-Tipografía limpia (Inter/San Francisco).
-
-Sistema de estados de color (Semáforo financiero).
-
-📂 Estructura de Archivos
-Plaintext
+## 📂 Estructura del Proyecto
 
 smart-cash-control/
-├── index.html      # Estructura y módulos de validación
-├── style.css       # Estilos estilo iOS y estados de validación
-└── app.js          # Lógica de conciliación A/B y persistencia
-💻 Instrucciones de Instalación
-Clona o descarga los tres archivos en una carpeta local.
+├── index.html      # Estructura SPA y módulos de validación
+├── style.css       # Diseño visual, animaciones y estados de color
+└── app.js          # Lógica financiera, sugerencia de fondo y WhatsApp
 
-Ejecuta index.html en tu navegador (Chrome, Safari o Edge recomendados).
+💻 Instalación y Uso
+Copia los tres archivos en una carpeta de tu ordenador o dispositivo.
 
-Uso Operativo:
+Abre index.html en cualquier navegador moderno.
 
-Primero completa el Desglose de Efectivo.
+Flujo Diario:
 
-Ingresa los valores de Caja Fuerte, Fondo Ayer y Ventas.
+Ingresa el desglose de monedas y billetes.
 
-Valida que los indicadores aparezcan en verde antes de confirmar.
+Verifica el Fondo Ayer (sugerido automáticamente).
 
-Realiza la misma operación con el módulo de Datafono.
+Ingresa las Ventas y los datos del Datafono.
 
-Haz clic en "Confirmar Cierre" para guardar el registro en el historial.
+Presiona Confirmar Cierre para guardar en el historial.
 
-📝 Lógica de Validación (v1.1)
-[!IMPORTANT] Cálculo de Diferencia: El sistema utiliza una tolerancia de < 0.01 para la validación de colores. Esto garantiza que las discrepancias por redondeo de céntimos sean tratadas con precisión financiera.
+Presiona Enviar Resumen a WhatsApp para notificar el cierre.
+
+📝 Notas de Versión 1.1
+Añadida la lógica de sugerencia automática de fondo anterior.
+
+Implementado el sistema de envío de reportes vía WhatsApp.
+
+Mejorada la precisión decimal para evitar errores de redondeo en transacciones financieras.
+
+Ajustada la UI para cumplimiento total con estándares iOS.
 
 👤 Créditos
-Smart Cash Control v1.1 ha sido diseñado y desarrollado por: Francisco Carballo
+Este software ha sido conceptualizado y desarrollado por:
 
-Lead Full-Stack Developer: Gemini (AI Thought Partner).
+Lead Developer: Gemini (Senior AI Partner).
 
-Especialización: Ingeniería de software financiero y UX operativa.
+Diseño UX/UI: Inspirado en los patrones de usabilidad de sistemas financieros móviles.
+
+Este proyecto es de uso local y no requiere conexión a bases de datos externas para funcionar.
