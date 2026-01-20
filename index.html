@@ -1,37 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Le Celier Manager</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Smart Cash Control</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap">
 </head>
 <body>
 
-  <header>
-    <h1>Le Celier Manager</h1>
-  </header>
+    <nav class="tab-bar">
+        <button onclick="app.switchView('counter')" class="tab-item active" id="tab-counter">Caja</button>
+        <button onclick="app.switchView('history')" class="tab-item" id="tab-history">Historial</button>
+        <button onclick="app.switchView('reports')" class="tab-item" id="tab-reports">Reportes</button>
+    </nav>
 
-  <!-- Contenedor principal de módulos -->
-  <main id="module-container">
-    <p>Bienvenido al gestor de restaurante y bodega. Selecciona un módulo desde el dock inferior.</p>
-  </main>
+    <main id="app-container">
+        <section id="view-counter" class="view">
+            <header class="view-header">
+                <h1>Cierre de Caja</h1>
+                <p id="current-date"></p>
+            </header>
 
-  <!-- Dock de navegación modular -->
-  <nav class="dock">
-    <button onclick="openModule('inventory')">Inventario</button>
-    <button onclick="openModule('orders')">Pedidos</button>
-    <button onclick="openModule('staff')">Personal</button>
-    <button onclick="openModule('events')">Eventos</button>
-    <button onclick="openModule('cash')">Caja</button>
-  </nav>
+            <div class="card">
+                <h3>Saldo Inicial</h3>
+                <input type="number" id="initial-balance" placeholder="0.00" step="0.01">
+            </div>
 
-  <!-- Actividad reciente -->
-  <aside id="activity">
-    <h2>Actividad reciente</h2>
-    <div id="activity-list">Sin actividad por ahora.</div>
-  </aside>
+            <div class="card">
+                <h3>Desglose de Efectivo</h3>
+                <div id="denominations-container">
+                    </div>
+                <div class="total-row">
+                    <span>Total Efectivo:</span>
+                    <span id="total-counted" class="amount">€0.00</span>
+                </div>
+            </div>
 
-  <script src="app.js"></script>
+            <div class="card">
+                <h3>Validación</h3>
+                <div class="input-group">
+                    <label>Ventas Esperadas (€)</label>
+                    <input type="number" id="expected-amount" placeholder="0.00">
+                </div>
+                <div class="result-row" id="diff-row">
+                    <span>Diferencia:</span>
+                    <span id="difference-amount">€0.00</span>
+                </div>
+                <textarea id="observations" placeholder="Observaciones o incidencias..."></textarea>
+                <button class="btn-primary" onclick="app.saveClosing()">Confirmar Cierre</button>
+            </div>
+        </section>
+
+        <section id="view-history" class="view hidden">
+            <header class="view-header">
+                <h1>Histórico</h1>
+                <input type="date" id="history-filter" onchange="app.renderHistory()">
+            </header>
+            <div id="history-list"></div>
+        </section>
+
+        <section id="view-reports" class="view hidden">
+            <header class="view-header">
+                <h1>Reportes</h1>
+            </header>
+            <div class="card">
+                <div class="input-group">
+                    <label>Desde:</label>
+                    <input type="date" id="report-start">
+                </div>
+                <div class="input-group">
+                    <label>Hasta:</label>
+                    <input type="date" id="report-end">
+                </div>
+                <button class="btn-secondary" onclick="app.generateReport()">Generar Resumen</button>
+            </div>
+            <div id="report-results" class="hidden">
+                </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
 </body>
 </html>
