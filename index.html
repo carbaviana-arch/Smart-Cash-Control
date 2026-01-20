@@ -1,85 +1,51 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Cash Control</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap">
-</head>
-<body>
+<div class="card">
+    <h3>1. Conciliación de Efectivo</h3>
+    
+    <div class="input-group">
+        <label>Total Caja (Contado + Fuerte) - [A]</label>
+        <input type="number" id="total-cash-combined" readonly class="readonly-input">
+    </div>
 
-    <nav class="tab-bar">
-        <button onclick="app.switchView('counter')" class="tab-item active" id="tab-counter">Caja</button>
-        <button onclick="app.switchView('history')" class="tab-item" id="tab-history">Historial</button>
-        <button onclick="app.switchView('reports')" class="tab-item" id="tab-reports">Reportes</button>
-    </nav>
+    <div class="row-flex">
+        <div class="input-group">
+            <label>Fondo Ayer (€)</label>
+            <input type="number" id="fondo-ayer" placeholder="0.00" oninput="app.calculateTotal()">
+        </div>
+        <div class="input-group">
+            <label>Ventas Efectivo (€)</label>
+            <input type="number" id="ventas-efectivo" placeholder="0.00" oninput="app.calculateTotal()">
+        </div>
+    </div>
 
-    <main id="app-container">
-        <section id="view-counter" class="view">
-            <header class="view-header">
-                <h1>Cierre de Caja</h1>
-                <p id="current-date"></p>
-            </header>
+    <div class="input-group">
+        <label>Total Caja B (Teórico) - [B]</label>
+        <input type="number" id="total-caja-b" readonly class="readonly-input">
+    </div>
 
-            <div class="card">
-                <h3>Saldo Inicial</h3>
-                <input type="number" id="initial-balance" placeholder="0.00" step="0.01">
-            </div>
+    <div class="result-row">
+        <span>Diferencia de Caja (A - B):</span>
+        <span id="diff-caja-total" class="status-badge">€0.00</span>
+    </div>
 
-            <div class="card">
-                <h3>Desglose de Efectivo</h3>
-                <div id="denominations-container">
-                    </div>
-                <div class="total-row">
-                    <span>Total Efectivo:</span>
-                    <span id="total-counted" class="amount">€0.00</span>
-                </div>
-            </div>
+    <hr class="separator">
 
-            <div class="card">
-                <h3>Validación</h3>
-                <div class="input-group">
-                    <label>Ventas Esperadas (€)</label>
-                    <input type="number" id="expected-amount" placeholder="0.00">
-                </div>
-                <div class="result-row" id="diff-row">
-                    <span>Diferencia:</span>
-                    <span id="difference-amount">€0.00</span>
-                </div>
-                <textarea id="observations" placeholder="Observaciones o incidencias..."></textarea>
-                <button class="btn-primary" onclick="app.saveClosing()">Confirmar Cierre</button>
-            </div>
-        </section>
+    <h3>2. Conciliación Datafono</h3>
+    <div class="row-flex">
+        <div class="input-group">
+            <label>Cierre Datafono (€)</label>
+            <input type="number" id="cierre-datafono" placeholder="0.00" oninput="app.calculateTotal()">
+        </div>
+        <div class="input-group">
+            <label>Reporte Z (Tarjetas) (€)</label>
+            <input type="number" id="reporte-z" placeholder="0.00" oninput="app.calculateTotal()">
+        </div>
+    </div>
 
-        <section id="view-history" class="view hidden">
-            <header class="view-header">
-                <h1>Histórico</h1>
-                <input type="date" id="history-filter" onchange="app.renderHistory()">
-            </header>
-            <div id="history-list"></div>
-        </section>
+    <div class="result-row">
+        <span>Diferencia Datafono:</span>
+        <span id="diff-datafono" class="status-badge">€0.00</span>
+    </div>
 
-        <section id="view-reports" class="view hidden">
-            <header class="view-header">
-                <h1>Reportes</h1>
-            </header>
-            <div class="card">
-                <div class="input-group">
-                    <label>Desde:</label>
-                    <input type="date" id="report-start">
-                </div>
-                <div class="input-group">
-                    <label>Hasta:</label>
-                    <input type="date" id="report-end">
-                </div>
-                <button class="btn-secondary" onclick="app.generateReport()">Generar Resumen</button>
-            </div>
-            <div id="report-results" class="hidden">
-                </div>
-        </section>
-    </main>
-
-    <script src="app.js"></script>
-</body>
-</html>
+    <textarea id="observations" placeholder="Observaciones de descuadres..."></textarea>
+    <button class="btn-primary" onclick="app.saveClosing()">Confirmar Cierre v1.3</button>
+</div>
