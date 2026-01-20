@@ -56,6 +56,17 @@ body {
 
 .summary-card { border-left: 5px solid var(--ios-blue); }
 
+.safe-box-input {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed #E5E5EA;
+}
+
+.safe-box-input input {
+    border-color: var(--ios-blue);
+    background-color: #F0F7FF;
+}
+
 .highlighted-result { background: #F2F2F7; padding: 15px; border-radius: 12px; margin-top: 10px; }
 .amount-large { font-size: 22px; font-weight: 800; color: var(--ios-blue); }
 
