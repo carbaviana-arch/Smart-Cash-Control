@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Cash Control v1.2</title>
+    <title>Smart Cash Control v2.0</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
 </head>
@@ -15,21 +15,54 @@
                 <div class="app-icon"><span>$</span></div>
                 <div class="brand-text">
                     <h1>Smart Cash</h1>
-                    <span class="version-tag">Control v1.2 • Pro</span>
+                    <span class="version-tag">Control v2.0 • Pro</span>
                 </div>
             </div>
-            <div id="header-date" class="date-chip">Cargando...</div>
+            <div id="header-date" class="date-chip">...</div>
         </div>
     </header>
 
     <main id="app-container">
         <section id="view-counter" class="view">
-            <div class="card">
-                <h3>1. Efectivo en Cajón</h3>
-                <div class="input-group">
-                    <label>Fondo de Caja (Cambio Hoy) (€)</label>
-                    <input type="number" id="initial-balance" placeholder="0.00" step="0.01" oninput="app.calculateTotal()" inputmode="decimal">
+            
+            <div class="card summary-card">
+                <h3>Resumen Cierre (Contabilidad)</h3>
+                <div class="row-flex">
+                    <div class="input-group">
+                        <label>Fondo Ayer (€)</label>
+                        <input type="number" id="resumen-fondo-ayer" value="0" oninput="app.calculateResumen()" inputmode="decimal">
+                    </div>
+                    <div class="input-group">
+                        <label>Visa (€)</label>
+                        <input type="number" id="resumen-visa" value="0" oninput="app.calculateResumen()" inputmode="decimal">
+                    </div>
                 </div>
+                <div class="row-flex">
+                    <div class="input-group">
+                        <label>Efectivo (€)</label>
+                        <input type="number" id="resumen-efectivo" value="0" oninput="app.calculateResumen()" inputmode="decimal">
+                    </div>
+                    <div class="input-group">
+                        <label>Sobre (€)</label>
+                        <input type="number" id="resumen-sobre" value="0" oninput="app.calculateResumen()" inputmode="decimal">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Gastos Totales (€)</label>
+                    <input type="number" id="resumen-gastos" value="0" oninput="app.calculateResumen()" inputmode="decimal">
+                </div>
+                <div class="input-group">
+                    <label>Detalle de Gastos (Compras/Pagos)</label>
+                    <textarea id="resumen-detalle-gastos" placeholder="Ej: Mercadona 20€, Reparación 15€..." style="height: 60px;"></textarea>
+                </div>
+                <div class="result-row highlighted-result">
+                    <span>FONDO HOY (Final):</span>
+                    <span id="resumen-fondo-hoy" class="amount-large">€0.00</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>1. Efectivo en Cajón (Desglose)</h3>
                 <div id="denominations-container"></div>
                 <div class="total-row">
                     <span>Subtotal Monedas/Billetes:</span>
@@ -37,23 +70,15 @@
                 </div>
             </div>
 
-            <div class="card">
-                <h3>2. Reserva / Recaudación</h3>
-                <div class="input-group">
-                    <label>Caja Fuerte (€)</label>
-                    <input type="number" id="safe-amount" placeholder="0.00" step="0.01" oninput="app.calculateTotal()" inputmode="decimal">
-                </div>
-            </div>
-
             <div class="card highlighted">
-                <h3>3. Conciliación de Efectivo</h3>
+                <h3>2. Conciliación TPV vs Real</h3>
                 <div class="input-group">
-                    <label>Total Caja Real [A]</label>
+                    <label>Total Real en Caja [A]</label>
                     <input type="number" id="total-cash-combined" readonly class="readonly-input">
                 </div>
                 <div class="row-flex">
                     <div class="input-group">
-                        <label>Fondo Ayer (€)</label>
+                        <label>Fondo Inicial (€)</label>
                         <input type="number" id="fondo-ayer" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
                     </div>
                     <div class="input-group">
@@ -61,51 +86,29 @@
                         <input type="number" id="ventas-efectivo" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
                     </div>
                 </div>
-                <div class="input-group">
-                    <label>Total Caja Teórica [B]</label>
-                    <input type="number" id="total-caja-b" readonly class="readonly-input">
-                </div>
                 <div class="result-row">
-                    <span>Diferencia (A-B):</span>
+                    <span>Diferencia:</span>
                     <span id="diff-caja-total" class="status-badge">€0.00</span>
                 </div>
             </div>
 
             <div class="card">
-                <h3>4. Datafono e Intercambio</h3>
-                <div class="row-flex">
-                    <div class="input-group">
-                        <label>Cierre Datafono (€)</label>
-                        <input type="number" id="cierre-datafono" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
-                    </div>
-                    <div class="input-group">
-                        <label>Reporte Z (€)</label>
-                        <input type="number" id="reporte-z" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
-                    </div>
-                </div>
-                <div class="result-row" style="margin-bottom:15px">
-                    <span>Diferencia Datafono:</span>
-                    <span id="diff-datafono" class="status-badge">€0.00</span>
-                </div>
-                
-                <textarea id="observations" placeholder="Escribe aquí cualquier incidencia..."></textarea>
-                
+                <h3>3. Acciones y Archivos</h3>
+                <textarea id="observations" placeholder="Observaciones generales..."></textarea>
                 <div class="actions-stack">
-                    <button class="btn-primary" onclick="app.saveClosing()">💾 Confirmar Cierre</button>
-                    
+                    <button class="btn-primary" onclick="app.saveClosing()">💾 Guardar Cierre</button>
                     <div class="row-flex">
-                        <button class="btn-file" onclick="app.exportToJSON()">📤 Exportar JSON</button>
-                        <button class="btn-file" onclick="document.getElementById('importFile').click()">📥 Cargar JSON</button>
+                        <button class="btn-file" onclick="app.exportToJSON()">📤 Exportar</button>
+                        <button class="btn-file" onclick="document.getElementById('importFile').click()">📥 Importar</button>
                     </div>
                     <input type="file" id="importFile" style="display:none" accept=".json" onchange="app.importFromJSON(event)">
-                    
-                    <button class="btn-whatsapp" onclick="app.shareWhatsApp()">🟢 Enviar a WhatsApp</button>
+                    <button class="btn-whatsapp" onclick="app.shareWhatsApp()">🟢 Enviar WhatsApp</button>
                 </div>
             </div>
         </section>
 
         <section id="view-history" class="view hidden">
-            <header class="section-header"><h2>Historial de Arqueos</h2></header>
+            <header class="section-header"><h2>Historial</h2></header>
             <div id="history-list"></div>
         </section>
     </main>
