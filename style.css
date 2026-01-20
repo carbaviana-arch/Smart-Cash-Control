@@ -1,126 +1,119 @@
-/* =============================================
-   styles.css - Estilos globales y base para todos los módulos
-   ============================================= */
-
 :root {
-  --primary-color: #4b2e20;
-  --secondary-color: #faf7f2;
-  --accent-color: #d9b382;
-  --text-color: #3a2e2a;
-  --muted-color: #7a6a5f;
-  --radius: 8px;
-  --shadow: 0 2px 6px rgba(0,0,0,0.15);
+    --ios-blue: #007AFF;
+    --ios-bg: #F2F2F7;
+    --ios-card: #FFFFFF;
+    --ios-text: #000000;
+    --ios-gray: #8E8E93;
+    --ios-red: #FF3B30;
+    --ios-green: #34C759;
 }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: var(--secondary-color);
-  color: var(--text-color);
-  margin: 0;
-  padding: 0;
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--ios-bg);
+    color: var(--ios-text);
+    margin: 0;
+    padding-bottom: 80px; /* Espacio para el nav */
 }
 
-h1, h2 {
-  text-align: center;
-  color: var(--primary-color);
-  margin-bottom: 20px;
+/* Navegación estilo iOS */
+.tab-bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 65px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-top: 0.5px solid #C6C6C8;
+    z-index: 100;
 }
 
-main#module-container {
-  padding: 20px;
-  min-height: 60vh;
+.tab-item {
+    background: none;
+    border: none;
+    color: var(--ios-gray);
+    font-size: 12px;
+    font-weight: 500;
 }
 
-/* Dock de navegación inferior */
-.dock {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background-color: var(--primary-color);
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  box-shadow: var(--shadow);
+.tab-item.active { color: var(--ios-blue); }
+
+/* Layout y Cards */
+.view { padding: 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.hidden { display: none; }
+
+.view-header h1 { font-size: 28px; font-weight: 700; margin-bottom: 5px; }
+
+.card {
+    background: var(--ios-card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
-.dock button {
-  background: var(--accent-color);
-  border: none;
-  border-radius: var(--radius);
-  color: #fff;
-  padding: 10px 15px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
+.card h3 { font-size: 14px; text-transform: uppercase; color: var(--ios-gray); margin-bottom: 15px; }
+
+/* Inputs y Botones */
+input, textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #E5E5EA;
+    border-radius: 8px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    background: #F9F9F9;
 }
 
-.dock button:hover, .dock button.active {
-  background: #a5693f;
+.denom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
-/* Actividad reciente */
-#activity {
-  position: fixed;
-  right: 0;
-  top: 80px;
-  width: 220px;
-  background: #fff;
-  padding: 15px;
-  box-shadow: var(--shadow);
-  border-radius: var(--radius);
-  max-height: 60vh;
-  overflow-y: auto;
+.denom-label { width: 60px; font-weight: 600; }
+.denom-input { width: 80px; text-align: right; margin-bottom: 0; }
+
+.total-row, .result-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #F2F2F7;
 }
 
-#activity h2 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: var(--primary-color);
+.amount { color: var(--ios-blue); }
+.diff-negative { color: var(--ios-red); }
+.diff-positive { color: var(--ios-green); }
+
+.btn-primary {
+    width: 100%;
+    background: var(--ios-blue);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s;
 }
 
-#activity-list div {
-  margin-bottom: 8px;
-  font-size: 0.9rem;
-}
+.btn-primary:active { transform: scale(0.98); }
 
-#activity-list .muted {
-  color: var(--muted-color);
-  font-size: 0.8rem;
-}
+.btn-secondary { background: #E5E5EA; color: black; border-radius: 8px; border:none; padding: 10px; cursor:pointer;}
 
-/* Tablas base para todos los módulos */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 10px 0;
-}
-
-table th, table td {
-  border: 1px solid var(--muted-color);
-  padding: 8px;
-  text-align: left;
-}
-
-table th {
-  background-color: var(--accent-color);
-  color: #fff;
-}
-
-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* Formularios y botones de acción */
-button.action {
-  background-color: var(--primary-color);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-button.action:hover {
-  background-color: #3a1f13;
+/* Responsive */
+@media (max-width: 480px) {
+    .view { padding: 15px; }
 }
