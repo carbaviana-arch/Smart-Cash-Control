@@ -1,74 +1,78 @@
 Smart Cash Control - v1.1
-Smart Cash Control es una solución web ligera y profesional diseñada para optimizar el proceso de arqueo y cierre de caja diario en entornos de hostelería y retail. Esta herramienta elimina errores de cálculo manual y centraliza el registro de diferencias de caja mediante una interfaz intuitiva inspirada en los estándares de diseño de iOS.
+Smart Cash Control es una herramienta avanzada de gestión financiera diseñada para el cierre de caja operativo en hostelería y retail. Esta versión 1.1 introduce un sistema de conciliación de doble entrada, permitiendo validar no solo el efectivo físico, sino también la correlación entre ventas teóricas y cierres de terminales de tarjeta (Datafono).
 
-🚀 Características (v1.1)
-1. Módulo de Conteo de Efectivo
-Desglose por Denominación: Entradas específicas para todos los billetes y monedas de curso legal (Euro).
+🚀 Características Principales (v1.1)
+1. Gestión de Efectivo y Caja Fuerte
+Conteo por Denominación: Desglose detallado de monedas y billetes con cálculo en tiempo real.
 
-Aritmética en Tiempo Real: Cálculo automático del total contado mientras se introducen las cantidades.
+Gestión de Caja Fuerte: Campo específico para declarar el efectivo en reserva, sumándose al total físico.
 
-Gestión de Saldo Inicial: Campo dedicado para el fondo de caja (change fund), integrado en el cálculo final.
+Integridad de Datos: El campo de subtotal de desglose es de solo lectura, obligando a un conteo físico real para evitar ajustes manuales arbitrarios.
 
-2. Cierre y Validación
-Cálculo de Diferencias: Comparativa automática entre el "Total Contado" y el "Total Esperado" (ventas TPV).
+2. Conciliación de Efectivo (A vs B)
+El sistema implementa una validación contable entre dos magnitudes:
 
-Indicadores Visuales: Alerta visual mediante colores (Verde: Sobrante/Correcto, Rojo: Faltante).
+Total Caja A (Físico): Suma del conteo de monedas/billetes + Fondo Inicial + Caja Fuerte.
 
-Observaciones: Campo de texto para documentar incidencias o motivos de descuadres.
+Total Caja B (Teórico): Suma del Fondo de Ayer + Ventas declaradas.
 
-3. Histórico y Auditoría
-Persistencia Local: Almacenamiento seguro en el navegador mediante localStorage.
+Validación Visual: El sistema compara A y B. Si la diferencia es exactamente 0.00, se marca en verde; cualquier otra diferencia se resalta en rojo.
 
-Filtros Inteligentes: Buscador por fecha para auditorías rápidas.
+3. Conciliación de Datafono y Reporte Z
+Validación de Tarjetas: Módulo independiente para comparar el total del cierre del terminal (Datafono) contra el reporte de ventas del sistema (Reporte Z).
 
-Detalle de Cierres: Visualización completa de cierres pasados sin recargar la página.
+Indicador de Descuadre: Al igual que en efectivo, el sistema alerta visualmente si existe alguna discrepancia entre el cobro físico en tarjeta y lo registrado.
 
-4. Reportes y Exportación
-Resúmenes Acumulados: Cálculo de totales y diferencias totales en rangos de fechas seleccionados.
+4. Histórico y Reportes
+Persistencia Local: Almacenamiento persistente en localStorage.
 
-Exportación PDF: Formato optimizado para impresión o guardado digital.
+Auditoría: Registro de observaciones para justificar descuadres detectados.
 
-Exportación Excel/CSV: Generación de archivos planos para integración con hojas de cálculo externas.
+Exportación: Generación de reportes en PDF (vía impresión optimizada) y Excel (CSV).
 
 🛠️ Stack Técnico
-Frontend: HTML5 semántico y CSS3 con variables (Custom Properties).
+Arquitectura: Single Page Application (SPA).
 
-Lógica: JavaScript Vanilla (ES6+) siguiendo el patrón de diseño modular.
+Lenguajes: HTML5, CSS3 (Variables y Flexbox), JavaScript ES6+.
 
-Diseño: Sistema de diseño basado en Apple Human Interface Guidelines:
+Interfaz: iOS Design System (Apple Human Interface Guidelines).
 
-Tipografía: Inter / San Francisco.
+Uso de backdrop-filter para efectos de desenfoque.
 
-Efectos: Backdrop-filter (blur), sombras suaves y bordes redondeados (12px).
+Tipografía limpia (Inter/San Francisco).
 
-UX: Adaptado para uso táctil con maximum-scale=1.0 para evitar zooms accidentales.
+Sistema de estados de color (Semáforo financiero).
 
-📂 Estructura del Proyecto
+📂 Estructura de Archivos
 Plaintext
 
 smart-cash-control/
-├── index.html      # Punto de entrada y estructura de vistas (SPA)
-├── style.css       # Core de diseño y animaciones iOS
-└── app.js          # Lógica de negocio, cálculos y persistencia de datos
-💻 Instalación y Uso
-Al ser una Web App de una sola página (SPA) sin dependencias de servidor, su puesta en marcha es inmediata:
+├── index.html      # Estructura y módulos de validación
+├── style.css       # Estilos estilo iOS y estados de validación
+└── app.js          # Lógica de conciliación A/B y persistencia
+💻 Instrucciones de Instalación
+Clona o descarga los tres archivos en una carpeta local.
 
-Descarga los archivos del repositorio.
+Ejecuta index.html en tu navegador (Chrome, Safari o Edge recomendados).
 
-Abre el archivo index.html en cualquier navegador moderno (Chrome, Safari, Edge).
+Uso Operativo:
 
-Nota de Persistencia: Los datos se guardan en el navegador local. No borres el historial/caché si deseas mantener los registros sin haber exportado previamente a Excel.
+Primero completa el Desglose de Efectivo.
 
-📝 Notas de Versión 1.1
-Mejorado el cálculo de precisión decimal para evitar errores de redondeo de punto flotante en JS.
+Ingresa los valores de Caja Fuerte, Fondo Ayer y Ventas.
 
-Añadida la capacidad de filtrar el historial por fecha específica.
+Valida que los indicadores aparezcan en verde antes de confirmar.
 
-Optimización de la hoja de estilos para dispositivos móviles en modo vertical.
+Realiza la misma operación con el módulo de Datafono.
+
+Haz clic en "Confirmar Cierre" para guardar el registro en el historial.
+
+📝 Lógica de Validación (v1.1)
+[!IMPORTANT] Cálculo de Diferencia: El sistema utiliza una tolerancia de < 0.01 para la validación de colores. Esto garantiza que las discrepancias por redondeo de céntimos sean tratadas con precisión financiera.
 
 👤 Créditos
-Este software ha sido conceptualizado y desarrollado por:
+Smart Cash Control v1.1 ha sido diseñado y desarrollado por: Francisco Carballo
 
-Lead Developer: Gemini (Senior Full-Stack Developer)
+Lead Full-Stack Developer: Gemini (AI Thought Partner).
 
-Diseño UX/UI: Inspirado en los patrones de usabilidad de iOS para aplicaciones financieras.
+Especialización: Ingeniería de software financiero y UX operativa.
