@@ -6,63 +6,68 @@
     --ios-gray: #8E8E93;
     --ios-red: #FF3B30;
     --ios-green: #34C759;
+    --wa-green: #25D366;
 }
 
-* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
     background-color: var(--ios-bg);
     margin: 0; padding-bottom: 90px;
+    color: var(--ios-text);
 }
 
-/* Navegación Tab Bar */
 .tab-bar {
-    position: fixed; bottom: 0; width: 100%; height: 70px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(20px);
+    position: fixed; bottom: 0; width: 100%; height: 75px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     display: flex; justify-content: space-around; align-items: center;
     border-top: 0.5px solid #C6C6C8; z-index: 100;
 }
 
 .tab-item {
     background: none; border: none; color: var(--ios-gray);
-    font-size: 12px; font-weight: 600; cursor: pointer;
+    font-size: 11px; font-weight: 600; cursor: pointer;
 }
 
 .tab-item.active { color: var(--ios-blue); }
 
-/* Vistas y Cards */
 .view { padding: 20px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 .hidden { display: none; }
 
+.view-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+.view-header p { color: var(--ios-gray); margin-bottom: 20px; text-transform: capitalize; }
+
 .card {
-    background: var(--ios-card); border-radius: 14px;
-    padding: 16px; margin-bottom: 16px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    background: var(--ios-card); border-radius: 16px;
+    padding: 18px; margin-bottom: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 
-.card.highlighted { border: 1px solid #D1D1D6; }
-.card h3 { font-size: 13px; color: var(--ios-gray); text-transform: uppercase; margin-bottom: 12px; }
+.card.highlighted { border: 1.5px solid #D1D1D6; }
+.card h3 { font-size: 12px; color: var(--ios-gray); text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px; }
 
-/* Inputs y validación */
 .input-group { margin-bottom: 12px; }
-.input-group label { display: block; font-size: 13px; margin-bottom: 4px; color: #3A3A3C; }
+.input-group label { display: block; font-size: 13px; margin-bottom: 6px; color: #3A3A3C; font-weight: 500; }
 
 input, textarea {
-    width: 100%; padding: 12px; border: 1px solid #E5E5EA;
-    border-radius: 10px; font-size: 16px; background: #FAFAFA;
+    width: 100%; padding: 14px; border: 1px solid #E5E5EA;
+    border-radius: 12px; font-size: 16px; background: #F9F9F9;
+    transition: border-color 0.2s;
 }
 
-.readonly-input { background: #F2F2F7 !important; border-color: #D1D1D6 !important; font-weight: 700; }
+input:focus { border-color: var(--ios-blue); background: #FFF; }
 
-.row-flex { display: flex; gap: 10px; }
+.readonly-input { background: #F2F2F7 !important; border-color: #D1D1D6 !important; font-weight: 700; color: #1C1C1E; }
+.suggested { border-color: var(--ios-blue) !important; background-color: #F0F7FF !important; }
+
+.row-flex { display: flex; gap: 12px; }
 .row-flex .input-group { flex: 1; }
 
 .status-badge {
-    padding: 6px 14px; border-radius: 8px; font-weight: 800;
-    font-size: 18px; transition: all 0.3s;
+    padding: 6px 16px; border-radius: 10px; font-weight: 800; font-size: 18px;
 }
 
 .val-error { background: #FFEBEB; color: var(--ios-red); }
@@ -71,15 +76,25 @@ input, textarea {
 .total-row, .result-row {
     display: flex; justify-content: space-between; align-items: center;
     margin-top: 15px; padding-top: 15px; border-top: 0.5px solid #F2F2F7;
-    font-weight: 700;
+    font-weight: 700; font-size: 15px;
 }
+
+.actions-stack { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
 
 .btn-primary {
     width: 100%; background: var(--ios-blue); color: white;
-    border: none; padding: 18px; border-radius: 14px;
-    font-size: 17px; font-weight: 700; margin-top: 10px; cursor: pointer;
+    border: none; padding: 18px; border-radius: 16px;
+    font-size: 17px; font-weight: 700; cursor: pointer;
 }
 
-.denom-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-.denom-label { width: 50px; font-weight: 600; font-size: 14px; }
-.denom-input { text-align: right; }
+.btn-whatsapp {
+    width: 100%; background: var(--wa-green); color: white;
+    border: none; padding: 16px; border-radius: 16px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+}
+
+.denom-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.denom-label { width: 55px; font-weight: 600; font-size: 14px; color: #48484A; }
+.denom-input { text-align: right; padding: 10px; }
+
+textarea { resize: none; height: 80px; margin-top: 10px; }
