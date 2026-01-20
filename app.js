@@ -11,9 +11,8 @@ const app = {
 
     updateDate() {
         const now = new Date();
-        document.getElementById('current-date').innerText = now.toLocaleDateString('es-ES', { 
-            weekday: 'long', day: 'numeric', month: 'long' 
-        });
+        const options = { day: 'numeric', month: 'short' };
+        document.getElementById('header-date').innerText = now.toLocaleDateString('es-ES', options).toUpperCase();
     },
 
     suggestFondoAyer() {
@@ -31,7 +30,7 @@ const app = {
             <div class="denom-row">
                 <span class="denom-label">${d >= 1 ? d + '€' : (d * 100).toFixed(0) + 'c'}</span>
                 <input type="number" class="denom-input" data-value="${d}" 
-                       placeholder="0" min="0" oninput="app.calculateTotal()" inputmode="decimal">
+                       placeholder="0" oninput="app.calculateTotal()" inputmode="decimal">
             </div>
         `).join('');
     },
@@ -81,7 +80,7 @@ const app = {
         const diffD = (datafono - reporteZ).toFixed(2);
         const obs = document.getElementById('observations').value || "Sin observaciones.";
 
-        const text = `*CIERRE DE CAJA* 📊%0A` +
+        const text = `*RESUMEN DE CIERRE* 📊%0A` +
                      `📅 *Fecha:* ${new Date().toLocaleDateString()}%0A%0A` +
                      `*1. EFECTIVO*%0A` +
                      `• Total Real (A): €${totalA}%0A` +
@@ -91,7 +90,7 @@ const app = {
                      `• Datafono: €${datafono}%0A` +
                      `• Reporte Z: €${reporteZ}%0A` +
                      `• Diferencia: *€${diffD}* ${Math.abs(diffD) < 0.01 ? '✅' : '❌'}%0A%0A` +
-                     `*3. OBSERVACIONES*%0A${obs}`;
+                     `*3. NOTAS:* ${obs}`;
 
         window.open(`https://wa.me/?text=${text}`, '_blank');
     },
@@ -110,30 +109,34 @@ const app = {
 
         this.closings.unshift(closing);
         localStorage.setItem('closings', JSON.stringify(this.closings));
-        alert("Cierre guardado localmente. Pulse el botón verde para compartir por WhatsApp.");
+        alert("Cierre guardado correctamente.");
     },
 
     switchView(viewId) {
         document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
         document.getElementById(`view-${viewId}`).classList.remove('hidden');
-        document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.dock-item').forEach(t => t.classList.remove('active'));
         document.getElementById(`tab-${viewId}`).classList.add('active');
         if(viewId === 'history') this.renderHistory();
     },
 
     renderHistory() {
         const list = document.getElementById('history-list');
+        if (this.closings.length === 0) {
+            list.innerHTML = `<div class="card" style="text-align:center; color:#8E8E93">No hay cierres registrados.</div>`;
+            return;
+        }
         list.innerHTML = this.closings.map(c => `
             <div class="card">
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px">
-                    <strong>${new Date(c.date).toLocaleDateString()}</strong>
-                    <span class="${Math.abs(c.diffCaja) < 0.01 ? 'val-success' : 'val-error'}" style="font-weight:700; border-radius:4px; padding:2px 6px">
+                <div style="display:flex; justify-content:space-between; margin-bottom:10px">
+                    <strong style="font-size:15px">${new Date(c.date).toLocaleDateString()}</strong>
+                    <span class="${Math.abs(c.diffCaja) < 0.01 ? 'val-success' : 'val-error'}" style="font-weight:800; padding:2px 8px; border-radius:6px; font-size:14px">
                         Dif: €${c.diffCaja.toFixed(2)}
                     </span>
                 </div>
-                <div style="font-size:13px; color:var(--ios-gray)">
-                    Caja Real: €${c.totalA.toFixed(2)} | Teórico: €${c.totalB.toFixed(2)}<br>
-                    Tarjetas: €${c.datafono.toFixed(2)} vs Z: €${c.reporteZ.toFixed(2)}
+                <div style="font-size:13px; line-height:1.5; color:#48484A">
+                    Efectivo: Real €${c.totalA.toFixed(2)} | Teórico €${c.totalB.toFixed(2)}<br>
+                    Tarjetas: Datafono €${c.datafono.toFixed(2)} vs Z €${c.reporteZ.toFixed(2)}
                 </div>
             </div>
         `).join('');
