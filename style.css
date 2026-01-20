@@ -1,28 +1,85 @@
-/* Nuevos estilos v1.3 */
-.row-flex {
-    display: flex;
-    gap: 10px;
+:root {
+    --ios-blue: #007AFF;
+    --ios-bg: #F2F2F7;
+    --ios-card: #FFFFFF;
+    --ios-text: #000000;
+    --ios-gray: #8E8E93;
+    --ios-red: #FF3B30;
+    --ios-green: #34C759;
 }
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background-color: var(--ios-bg);
+    margin: 0; padding-bottom: 90px;
+}
+
+/* Navegación Tab Bar */
+.tab-bar {
+    position: fixed; bottom: 0; width: 100%; height: 70px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 0.5px solid #C6C6C8; z-index: 100;
+}
+
+.tab-item {
+    background: none; border: none; color: var(--ios-gray);
+    font-size: 12px; font-weight: 600; cursor: pointer;
+}
+
+.tab-item.active { color: var(--ios-blue); }
+
+/* Vistas y Cards */
+.view { padding: 20px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.hidden { display: none; }
+
+.card {
+    background: var(--ios-card); border-radius: 14px;
+    padding: 16px; margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.card.highlighted { border: 1px solid #D1D1D6; }
+.card h3 { font-size: 13px; color: var(--ios-gray); text-transform: uppercase; margin-bottom: 12px; }
+
+/* Inputs y validación */
+.input-group { margin-bottom: 12px; }
+.input-group label { display: block; font-size: 13px; margin-bottom: 4px; color: #3A3A3C; }
+
+input, textarea {
+    width: 100%; padding: 12px; border: 1px solid #E5E5EA;
+    border-radius: 10px; font-size: 16px; background: #FAFAFA;
+}
+
+.readonly-input { background: #F2F2F7 !important; border-color: #D1D1D6 !important; font-weight: 700; }
+
+.row-flex { display: flex; gap: 10px; }
 .row-flex .input-group { flex: 1; }
 
 .status-badge {
-    padding: 4px 12px;
-    border-radius: 6px;
+    padding: 6px 14px; border-radius: 8px; font-weight: 800;
+    font-size: 18px; transition: all 0.3s;
+}
+
+.val-error { background: #FFEBEB; color: var(--ios-red); }
+.val-success { background: #EBFBED; color: var(--ios-green); }
+
+.total-row, .result-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 15px; padding-top: 15px; border-top: 0.5px solid #F2F2F7;
     font-weight: 700;
 }
 
-/* Colores de validación solicitados */
-.val-error { color: var(--ios-red) !important; }
-.val-success { color: var(--ios-green) !important; }
-
-.readonly-input {
-    background-color: #F2F2F7 !important;
-    border: 1px solid #D1D1D6 !important;
-    color: #3A3A3C !important;
+.btn-primary {
+    width: 100%; background: var(--ios-blue); color: white;
+    border: none; padding: 18px; border-radius: 14px;
+    font-size: 17px; font-weight: 700; margin-top: 10px; cursor: pointer;
 }
 
-.separator {
-    border: 0;
-    border-top: 0.5px solid #C6C6C8;
-    margin: 25px 0;
-}
+.denom-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.denom-label { width: 50px; font-weight: 600; font-size: 14px; }
+.denom-input { text-align: right; }
