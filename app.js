@@ -8,6 +8,7 @@ const app = {
         this.suggestFondoAyer();
         this.calculateTotal();
         this.calculateResumen();
+        this.calculateVisa();
     },
 
     updateDate() {
@@ -42,6 +43,20 @@ const app = {
 
         const fondoHoy = fondoAyer + efectivo - gastos - sobre;
         document.getElementById('resumen-fondo-hoy').innerText = `€${fondoHoy.toFixed(2)}`;
+        
+        // Sincronizar Visa del resumen con la sección de conciliación
+        document.getElementById('visa-tpv-ref').value = document.getElementById('resumen-visa').value;
+        this.calculateVisa();
+    },
+
+    calculateVisa() {
+        const visaTPV = parseFloat(document.getElementById('resumen-visa').value) || 0;
+        const cierreDatafono = parseFloat(document.getElementById('cierre-datafono').value) || 0;
+        
+        const diff = cierreDatafono - visaTPV;
+        const diffEl = document.getElementById('diff-visa');
+        diffEl.innerText = `€${diff.toFixed(2)}`;
+        diffEl.className = (Math.abs(diff) < 0.01) ? 'status-badge val-success' : 'status-badge val-error';
     },
 
     calculateTotal() {
@@ -50,7 +65,6 @@ const app = {
             totalDenom += (parseFloat(i.value) || 0) * parseFloat(i.dataset.value);
         });
 
-        // Sumar Caja Fuerte al subtotal físico
         const safeAmount = parseFloat(document.getElementById('safe-amount').value) || 0;
         const totalRealCaja = totalDenom + safeAmount;
 
@@ -73,6 +87,7 @@ const app = {
         const gastos = document.getElementById('resumen-gastos').value;
         const detalle = document.getElementById('resumen-detalle-gastos').value;
         const sobre = document.getElementById('resumen-sobre').value;
+        const diffVisa = document.getElementById('diff-visa').innerText;
 
         const text = `*CIERRE DE CAJA v2.1* 📊%0A%0A` +
                      `*RESUMEN CONTABLE*%0A` +
@@ -82,6 +97,8 @@ const app = {
                      `• Sobre: €${sobre}%0A` +
                      `• *FONDO HOY (Teórico): ${fondoHoy}*%0A` +
                      `• *TOTAL REAL CAJA: €${totalReal}*%0A%0A` +
+                     `*CONCILIACIÓN VISA*%0A` +
+                     `• Diferencia Datafono: ${diffVisa}%0A%0A` +
                      `*DETALLE GASTOS:*%0A${detalle || 'Sin gastos registrados.'}`;
 
         window.open(`https://wa.me/?text=${text}`, '_blank');
@@ -97,6 +114,7 @@ const app = {
                 gastos: document.getElementById('resumen-gastos').value,
                 detalle: document.getElementById('resumen-detalle-gastos').value
             },
+            datafono: document.getElementById('cierre-datafono').value,
             safe: document.getElementById('safe-amount').value,
             denominations: {}
         };
@@ -121,6 +139,7 @@ const app = {
                 document.getElementById('resumen-gastos').value = data.resumen.gastos;
                 document.getElementById('resumen-detalle-gastos').value = data.resumen.detalle;
             }
+            if(data.datafono) document.getElementById('cierre-datafono').value = data.datafono;
             if(data.safe) document.getElementById('safe-amount').value = data.safe;
             
             document.querySelectorAll('.denom-input').forEach(i => {
@@ -129,6 +148,7 @@ const app = {
 
             this.calculateResumen();
             this.calculateTotal();
+            this.calculateVisa();
             alert("Archivo de auditoría cargado.");
         };
         reader.readAsText(event.target.files[0]);
