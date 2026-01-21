@@ -44,7 +44,6 @@ const app = {
         const fondoHoy = fondoAyer + efectivo - gastos - sobre;
         document.getElementById('resumen-fondo-hoy').innerText = `€${fondoHoy.toFixed(2)}`;
         
-        // Sincronizar Visa del resumen con la sección de conciliación
         document.getElementById('visa-tpv-ref').value = document.getElementById('resumen-visa').value;
         this.calculateVisa();
     },
@@ -82,23 +81,28 @@ const app = {
     },
 
     shareWhatsApp() {
+        const fecha = document.getElementById('header-date').innerText;
+        const fondoAyer = document.getElementById('resumen-fondo-ayer').value || "0.00";
         const fondoHoy = document.getElementById('resumen-fondo-hoy').innerText;
-        const totalReal = document.getElementById('total-cash-combined').value;
-        const gastos = document.getElementById('resumen-gastos').value;
-        const detalle = document.getElementById('resumen-detalle-gastos').value;
-        const sobre = document.getElementById('resumen-sobre').value;
+        const visa = document.getElementById('resumen-visa').value || "0.00";
+        const efectivo = document.getElementById('resumen-efectivo').value || "0.00";
+        const gastos = document.getElementById('resumen-gastos').value || "0.00";
+        const sobre = document.getElementById('resumen-sobre').value || "0.00";
         const diffVisa = document.getElementById('diff-visa').innerText;
+        const detalle = document.getElementById('resumen-detalle-gastos').value;
 
-        const text = `*CIERRE DE CAJA v2.1* 📊%0A%0A` +
-                     `*RESUMEN CONTABLE*%0A` +
-                     `• Fondo Ayer: €${document.getElementById('resumen-fondo-ayer').value}%0A` +
-                     `• Efectivo: €${document.getElementById('resumen-efectivo').value}%0A` +
+        const visaStatus = (Math.abs(parseFloat(diffVisa.replace('€', ''))) < 0.01) ? "✅" : "❌";
+
+        const text = `*CIERRE DE CAJA (${fecha}) v2.1* 📊%0A%0A` +
+                     `*RESUMEN*%0A` +
+                     `• Fondo Ayer: €${fondoAyer}%0A` +
+                     `• *FONDO HOY: ${fondoHoy}*%0A` +
+                     `• Visa: €${visa}%0A` +
+                     `• Efectivo: €${efectivo}%0A` +
                      `• Gastos: €${gastos}%0A` +
-                     `• Sobre: €${sobre}%0A` +
-                     `• *FONDO HOY (Teórico): ${fondoHoy}*%0A` +
-                     `• *TOTAL REAL CAJA: €${totalReal}*%0A%0A` +
+                     `• Sobre: €${sobre}%0A%0A` +
                      `*CONCILIACIÓN VISA*%0A` +
-                     `• Diferencia Datafono: ${diffVisa}%0A%0A` +
+                     `• Diferencia Datafono: ${diffVisa} ${visaStatus}%0A%0A` +
                      `*DETALLE GASTOS:*%0A${detalle || 'Sin gastos registrados.'}`;
 
         window.open(`https://wa.me/?text=${text}`, '_blank');
@@ -123,7 +127,7 @@ const app = {
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `Cierre_Auditoria_${new Date().toLocaleDateString()}.json`;
+        a.download = `Cierre_${new Date().toLocaleDateString()}.json`;
         a.click();
     },
 
@@ -149,7 +153,6 @@ const app = {
             this.calculateResumen();
             this.calculateTotal();
             this.calculateVisa();
-            alert("Archivo de auditoría cargado.");
         };
         reader.readAsText(event.target.files[0]);
     },
