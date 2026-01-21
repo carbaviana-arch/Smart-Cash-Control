@@ -34,7 +34,7 @@
                     </div>
                     <div class="input-group">
                         <label>Visa (€)</label>
-                        <input type="number" id="resumen-visa" value="0" oninput="app.calculateResumen()" inputmode="decimal">
+                        <input type="number" id="resumen-visa" value="0" oninput="app.calculateResumen(); app.calculateVisa()" inputmode="decimal">
                     </div>
                 </div>
                 <div class="row-flex">
@@ -77,7 +77,7 @@
             </div>
 
             <div class="card highlighted">
-                <h3>2. Conciliación TPV vs Real</h3>
+                <h3>2. Conciliación TPV vs Real (Efectivo)</h3>
                 <div class="input-group">
                     <label>Total Real en Caja [A]</label>
                     <input type="number" id="total-cash-combined" readonly class="readonly-input">
@@ -93,13 +93,31 @@
                     </div>
                 </div>
                 <div class="result-row">
-                    <span>Diferencia:</span>
+                    <span>Diferencia Efectivo:</span>
                     <span id="diff-caja-total" class="status-badge">€0.00</span>
                 </div>
             </div>
 
+            <div class="card highlighted">
+                <h3>3. Conciliación de Tarjetas</h3>
+                <div class="row-flex">
+                    <div class="input-group">
+                        <label>Ventas Visa TPV (€)</label>
+                        <input type="number" id="visa-tpv-ref" readonly class="readonly-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Cierre Datafono (€)</label>
+                        <input type="number" id="cierre-datafono" placeholder="0.00" oninput="app.calculateVisa()" inputmode="decimal">
+                    </div>
+                </div>
+                <div class="result-row">
+                    <span>Diferencia Visa:</span>
+                    <span id="diff-visa" class="status-badge">€0.00</span>
+                </div>
+            </div>
+
             <div class="card">
-                <h3>3. Acciones y Archivos</h3>
+                <h3>4. Acciones y Archivos</h3>
                 <textarea id="observations" placeholder="Observaciones generales..."></textarea>
                 <div class="actions-stack">
                     <button class="btn-primary" onclick="app.saveClosing()">💾 Guardar Cierre</button>
