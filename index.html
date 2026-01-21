@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Cash Control v2.1</title>
+    <title>Smart Cash Pro v2.1</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
 
     <header class="main-header">
         <div class="header-content">
             <div class="brand">
-                <div class="app-icon"><span>$</span></div>
+                <div class="app-icon"><i data-lucide="shield-check"></i></div>
                 <div class="brand-text">
                     <h1>Smart Cash</h1>
-                    <span class="version-tag">Control v2.1 • Pro</span>
+                    <span class="version-tag">Professional v2.1</span>
                 </div>
             </div>
             <div id="header-date" class="date-chip">...</div>
@@ -26,128 +27,150 @@
         <section id="view-counter" class="view">
             
             <div class="card summary-card">
-                <h3>Resumen Cierre (Contabilidad)</h3>
+                <div class="card-header">
+                    <i data-lucide="bar-chart-3"></i>
+                    <h3>Resumen Cierre</h3>
+                </div>
                 <div class="row-flex">
                     <div class="input-group">
-                        <label>Fondo Ayer (€)</label>
+                        <label>Fondo Ayer</label>
                         <input type="number" id="resumen-fondo-ayer" value="0" oninput="app.calculateResumen()" inputmode="decimal">
                     </div>
                     <div class="input-group">
-                        <label>Visa (€)</label>
-                        <input type="number" id="resumen-visa" value="0" oninput="app.calculateResumen(); app.calculateVisa()" inputmode="decimal">
+                        <label>Visa TPV</label>
+                        <input type="number" id="resumen-visa" value="0" oninput="app.calculateResumen()" inputmode="decimal">
                     </div>
                 </div>
                 <div class="row-flex">
                     <div class="input-group">
-                        <label>Efectivo (€)</label>
+                        <label>Efectivo</label>
                         <input type="number" id="resumen-efectivo" value="0" oninput="app.calculateResumen()" inputmode="decimal">
                     </div>
                     <div class="input-group">
-                        <label>Sobre (€)</label>
+                        <label>Sobre</label>
                         <input type="number" id="resumen-sobre" value="0" oninput="app.calculateResumen()" inputmode="decimal">
                     </div>
                 </div>
                 <div class="input-group">
-                    <label>Gastos Totales (€)</label>
+                    <label>Gastos Totales</label>
                     <input type="number" id="resumen-gastos" value="0" oninput="app.calculateResumen()" inputmode="decimal">
                 </div>
                 <div class="input-group">
                     <label>Detalle de Gastos</label>
-                    <textarea id="resumen-detalle-gastos" placeholder="Ej: Mercadona 20€..." style="height: 60px;"></textarea>
+                    <textarea id="resumen-detalle-gastos" placeholder="Describa los gastos..."></textarea>
                 </div>
-                <div class="result-row highlighted-result">
-                    <span>FONDO HOY (Final):</span>
-                    <span id="resumen-fondo-hoy" class="amount-large">€0.00</span>
+                <div class="result-box">
+                    <span class="label">FONDO HOY</span>
+                    <span id="resumen-fondo-hoy" class="value">€0.00</span>
                 </div>
             </div>
 
             <div class="card">
-                <h3>1. Efectivo en Cajón (Desglose)</h3>
-                <div id="denominations-container"></div>
+                <div class="card-header">
+                    <i data-lucide="banknote"></i>
+                    <h3>1. Efectivo en Cajón</h3>
+                </div>
+                <div id="denominations-container" class="grid-denoms"></div>
                 
-                <div class="input-group safe-box-input">
-                    <label>Caja Fuerte (€)</label>
-                    <input type="number" id="safe-amount" placeholder="0.00" step="0.01" oninput="app.calculateTotal()" inputmode="decimal">
+                <div class="safe-box-area">
+                    <div class="input-group">
+                        <label><i data-lucide="lock" class="mini-icon"></i> Caja Fuerte (€)</label>
+                        <input type="number" id="safe-amount" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
+                    </div>
                 </div>
 
-                <div class="total-row">
-                    <span>Total Real Caja (Contado + Fuerte):</span>
-                    <span id="total-counted" class="amount">€0.00</span>
+                <div class="total-bar">
+                    <span>Total Real Caja:</span>
+                    <span id="total-counted">€0.00</span>
                 </div>
             </div>
 
-            <div class="card highlighted">
-                <h3>2. Conciliación TPV vs Real (Efectivo)</h3>
+            <div class="card highlight-card">
+                <div class="card-header">
+                    <i data-lucide="scale"></i>
+                    <h3>2. Conciliación Efectivo</h3>
+                </div>
                 <div class="input-group">
-                    <label>Total Real en Caja [A]</label>
+                    <label>Total Real [A]</label>
                     <input type="number" id="total-cash-combined" readonly class="readonly-input">
                 </div>
                 <div class="row-flex">
                     <div class="input-group">
-                        <label>Fondo Inicial (€)</label>
-                        <input type="number" id="fondo-ayer" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
+                        <label>Fondo Inicial</label>
+                        <input type="number" id="fondo-ayer" oninput="app.calculateTotal()" inputmode="decimal">
                     </div>
                     <div class="input-group">
-                        <label>Ventas TPV (€)</label>
-                        <input type="number" id="ventas-efectivo" placeholder="0.00" oninput="app.calculateTotal()" inputmode="decimal">
+                        <label>Ventas TPV</label>
+                        <input type="number" id="ventas-efectivo" oninput="app.calculateTotal()" inputmode="decimal">
                     </div>
                 </div>
-                <div class="result-row">
-                    <span>Diferencia Efectivo:</span>
-                    <span id="diff-caja-total" class="status-badge">€0.00</span>
+                <div class="diff-box">
+                    <span>Diferencia:</span>
+                    <span id="diff-caja-total" class="badge">€0.00</span>
                 </div>
             </div>
 
-            <div class="card highlighted">
-                <h3>3. Conciliación de Tarjetas</h3>
+            <div class="card highlight-card">
+                <div class="card-header">
+                    <i data-lucide="credit-card"></i>
+                    <h3>3. Conciliación Tarjetas</h3>
+                </div>
                 <div class="row-flex">
                     <div class="input-group">
-                        <label>Ventas Visa TPV (€)</label>
+                        <label>Visa TPV</label>
                         <input type="number" id="visa-tpv-ref" readonly class="readonly-input">
                     </div>
                     <div class="input-group">
-                        <label>Cierre Datafono (€)</label>
-                        <input type="number" id="cierre-datafono" placeholder="0.00" oninput="app.calculateVisa()" inputmode="decimal">
+                        <label>Cierre Datafono</label>
+                        <input type="number" id="cierre-datafono" oninput="app.calculateVisa()" inputmode="decimal">
                     </div>
                 </div>
-                <div class="result-row">
-                    <span>Diferencia Visa:</span>
-                    <span id="diff-visa" class="status-badge">€0.00</span>
+                <div class="diff-box">
+                    <span>Diferencia:</span>
+                    <span id="diff-visa" class="badge">€0.00</span>
                 </div>
             </div>
 
             <div class="card">
-                <h3>4. Acciones y Archivos</h3>
-                <textarea id="observations" placeholder="Observaciones generales..."></textarea>
-                <div class="actions-stack">
-                    <button class="btn-primary" onclick="app.saveClosing()">💾 Guardar Cierre</button>
-                    <div class="row-flex">
-                        <button class="btn-file" onclick="app.exportToJSON()">📤 Exportar</button>
-                        <button class="btn-file" onclick="document.getElementById('importFile').click()">📥 Importar</button>
-                    </div>
-                    <input type="file" id="importFile" style="display:none" accept=".json" onchange="app.importFromJSON(event)">
-                    <button class="btn-whatsapp" onclick="app.shareWhatsApp()">🟢 Enviar WhatsApp</button>
+                <div class="actions-grid">
+                    <button class="btn-main" onclick="app.saveClosing()">
+                        <i data-lucide="database"></i> Guardar
+                    </button>
+                    <button class="btn-secondary" onclick="app.exportToJSON()">
+                        <i data-lucide="download"></i> JSON
+                    </button>
+                    <button class="btn-secondary" onclick="document.getElementById('importFile').click()">
+                        <i data-lucide="upload"></i> Cargar
+                    </button>
+                    <input type="file" id="importFile" hidden onchange="app.importFromJSON(event)">
+                    <button class="btn-wa" onclick="app.shareWhatsApp()">
+                        <i data-lucide="message-circle"></i> Enviar WhatsApp
+                    </button>
                 </div>
             </div>
         </section>
 
         <section id="view-history" class="view hidden">
-            <header class="section-header"><h2>Historial</h2></header>
+            <div class="card-header" style="margin-bottom: 20px;">
+                <i data-lucide="history"></i>
+                <h3 style="color: var(--text-main)">Historial de Cierres</h3>
+            </div>
             <div id="history-list"></div>
         </section>
     </main>
 
-    <nav class="dock-container">
-        <div class="dock">
-            <button onclick="app.switchView('counter')" class="dock-item active" id="tab-counter">
-                <div class="icon-box">🏦</div><span>Caja</span>
-            </button>
-            <button onclick="app.switchView('history')" class="dock-item" id="tab-history">
-                <div class="icon-box">📜</div><span>Historial</span>
-            </button>
-        </div>
+    <nav class="tab-bar">
+        <button onclick="app.switchView('counter')" class="tab-item active" id="tab-counter">
+            <i data-lucide="layout-grid"></i>
+            <span>Caja</span>
+        </button>
+        <button onclick="app.switchView('history')" class="tab-item" id="tab-history">
+            <i data-lucide="clock"></i>
+            <span>Historial</span>
+        </button>
     </nav>
 
     <script src="app.js"></script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
