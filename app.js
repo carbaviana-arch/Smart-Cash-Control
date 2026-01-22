@@ -80,6 +80,73 @@ const app = {
         diffEl.className = (Math.abs(diff) < 0.01) ? 'badge val-success' : 'badge val-error';
     },
 
+    exportToJSON() {
+        const data = {
+            resumen: {
+                ayer: document.getElementById('resumen-fondo-ayer').value,
+                visa: document.getElementById('resumen-visa').value,
+                efectivo: document.getElementById('resumen-efectivo').value,
+                sobre: document.getElementById('resumen-sobre').value,
+                gastos: document.getElementById('resumen-gastos').value,
+                detalle: document.getElementById('resumen-detalle-gastos').value
+            },
+            ventasTPV: document.getElementById('ventas-efectivo').value,
+            datafono: document.getElementById('cierre-datafono').value,
+            safe: document.getElementById('safe-amount').value,
+            denominations: {}
+        };
+        document.querySelectorAll('.denom-input').forEach(i => {
+            data.denominations[i.dataset.value] = i.value;
+        });
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const a = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = `Cierre_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    },
+
+    importFromJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (data.resumen) {
+                    document.getElementById('resumen-fondo-ayer').value = data.resumen.ayer || 0;
+                    document.getElementById('resumen-visa').value = data.resumen.visa || 0;
+                    document.getElementById('resumen-efectivo').value = data.resumen.efectivo || 0;
+                    document.getElementById('resumen-sobre').value = data.resumen.sobre || 0;
+                    document.getElementById('resumen-gastos').value = data.resumen.gastos || 0;
+                    document.getElementById('resumen-detalle-gastos').value = data.resumen.detalle || "";
+                    document.getElementById('fondo-ayer').value = data.resumen.ayer || 0;
+                }
+                if (data.ventasTPV !== undefined) document.getElementById('ventas-efectivo').value = data.ventasTPV;
+                if (data.datafono !== undefined) document.getElementById('cierre-datafono').value = data.datafono;
+                if (data.safe !== undefined) document.getElementById('safe-amount').value = data.safe;
+                
+                if (data.denominations) {
+                    document.querySelectorAll('.denom-input').forEach(i => {
+                        i.value = data.denominations[i.dataset.value] || "";
+                    });
+                }
+                this.calculateResumen();
+                this.calculateTotal();
+                alert("✅ Cierre cargado correctamente");
+                event.target.value = '';
+            } catch (err) {
+                alert("❌ Formato de archivo no válido");
+            }
+        };
+        reader.readAsText(file);
+    },
+
     shareWhatsApp() {
         const fecha = document.getElementById('header-date').innerText;
         const fondoAyer = document.getElementById('resumen-fondo-ayer').value;
@@ -93,7 +160,7 @@ const app = {
 
         const statusVisa = (Math.abs(parseFloat(diffVisa.replace('€',''))) < 0.01) ? "✅" : "❌";
 
-        const text = `*CIERRE DE CAJA (${fecha}) v2.1* 📊%0A%0A` +
+        const text = `*CIERRE DE CAJA (${fecha}) v2.2* 📊%0A%0A` +
                      `*RESUMEN*%0A` +
                      `• Fondo Ayer: €${fondoAyer}%0A` +
                      `• *FONDO HOY: ${fondoHoy}*%0A` +
@@ -130,7 +197,7 @@ const app = {
             <div class="card" style="padding: 15px; margin-bottom: 8px;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-weight:600;">${new Date(c.date).toLocaleDateString()}</span>
-                    <span style="color:var(--accent); font-weight:800;">€${c.totalA.toFixed(2)}</span>
+                    <span style="color:#0056D2; font-weight:800;">€${c.totalA.toFixed(2)}</span>
                 </div>
             </div>
         `).join('') : '<p style="text-align:center; opacity:0.5;">No hay cierres guardados.</p>';
