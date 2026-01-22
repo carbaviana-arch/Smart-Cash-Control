@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart Cash Pro v2.1</title>
+    <title>Smart Cash Pro v2.2</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -16,7 +16,7 @@
                 <div class="app-icon"><i data-lucide="shield-check"></i></div>
                 <div class="brand-text">
                     <h1>Smart Cash</h1>
-                    <span class="version-tag">Professional v2.1</span>
+                    <span class="version-tag">Professional v2.2</span>
                 </div>
             </div>
             <div id="header-date" class="date-chip">...</div>
@@ -137,10 +137,10 @@
                         <i data-lucide="database"></i> Guardar
                     </button>
                     <button class="btn-secondary" onclick="app.exportToJSON()">
-                        <i data-lucide="download"></i> JSON
+                        <i data-lucide="download"></i> Exportar JSON
                     </button>
                     <button class="btn-secondary" onclick="document.getElementById('importFile').click()">
-                        <i data-lucide="upload"></i> Cargar
+                        <i data-lucide="upload"></i> Importar JSON
                     </button>
                     <input type="file" id="importFile" hidden onchange="app.importFromJSON(event)">
                     <button class="btn-wa" onclick="app.shareWhatsApp()">
@@ -153,7 +153,7 @@
         <section id="view-history" class="view hidden">
             <div class="card-header" style="margin-bottom: 20px;">
                 <i data-lucide="history"></i>
-                <h3 style="color: var(--text-main)">Historial de Cierres</h3>
+                <h3 style="color: #1A1C1E">Historial de Cierres</h3>
             </div>
             <div id="history-list"></div>
         </section>
